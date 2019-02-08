@@ -5,8 +5,8 @@ import click1 from './sounds/click1.wav';
 import click2 from './sounds/click2.wav';
 
 class App extends Component {
-  constructor(props){
-    super(props);
+  constructor(){
+    super();
 
     this.state={
       playing: false,
@@ -20,18 +20,22 @@ class App extends Component {
   }
 
   handleBpmChange =(event) =>{
-    const bpm = event.target.value;
-
     if(this.state.playing){
-      this.timer = setInterval(this.playClick, (60 / bpm) * 1000);
+      clearInterval(this.timer);
+      this.timer = setInterval(
+        this.playClick, 
+        (60 / this.state.bpm) * 1000
+      );
 
       this.setState({
+        bpm : event.target.value,
         count: 0,
-        bpm,
       });
     }else{
-      this.setState({bpm});
+      this.setState({bpm: event.target.value});
     }
+
+
   }
 
   startStop = () =>{
@@ -64,9 +68,10 @@ class App extends Component {
       this.click1.play();
     }
 
-    this.setState(state =>({
-      count: (state.count + 1) % state.beatsPerMeasure,
+    this.setState(() =>({
+      count: (count + 1) % beatsPerMeasure,
     }));
+    
   }
 
   render() {
